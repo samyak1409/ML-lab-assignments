@@ -6,7 +6,6 @@ from csv import reader
 
 
 with open('dataset.csv') as csv_file:
-
     data = reader(csv_file)
 
     attrs = next(data)[:-1]
@@ -19,44 +18,45 @@ with open('dataset.csv') as csv_file:
 
     # Finding and saving opposites of values (application- when first record is -ve)
     data = list(data)  # typecasting iterator to iterable
-    set_list, dict_list = [set() for _ in attr_range], [{} for _ in attr_range]
-    for i in attr_range:
-        set_, dict_ = set_list[i], dict_list[i]
-        for record in data:
-            set_.add(record[i])
-            if len(set_) == 2:  # coz any attr can have 2 values at max
-                e1, e2 = set_
-                dict_[e1], dict_[e2] = e2, e1
-                break
-        else:  # if opposite state of a value doesn't exist in (whole column of) dataset
-            dict_[set_.pop()] = '?'
-    print('Opposites:', dict_list, '\n')
 
-    # Assigning first record:
-    for values in data:  # Candidate Elimination considers both +ve as well as -ve records
-        print('Values:', values)
-        if values[-1] == 'Yes':  # +ve
-            s = values[:-1]
-            print('s:', s, '\n')
+set_list, dict_list = [set() for _ in attr_range], [{} for _ in attr_range]
+for i in attr_range:
+    set_, dict_ = set_list[i], dict_list[i]
+    for record in data:
+        set_.add(record[i])
+        if len(set_) == 2:  # coz any attr can have 2 values at max
+            e1, e2 = set_
+            dict_[e1], dict_[e2] = e2, e1
             break
-        else:  # -ve
-            for i, value in enumerate(values[:-1]):
-                g[i][i] = dict_list[i][value]
-            print('g:', g, '\n')
+    else:  # if opposite state of a value doesn't exist in (whole column of) dataset
+        dict_[set_.pop()] = '?'
+print('Opposites:', dict_list, '\n')
 
-    for values in data:
-        print('Values:', values)
-        if values[-1] == 'Yes':  # generalize
-            for i, value in enumerate(values[:-1]):
-                if s[i] != value:
-                    s[i] = '?'
-            print('s:', s)
-        else:  # specify
-            for i, value in enumerate(values[:-1]):
-                if s[i] != value:
-                    g[i][i] = s[i]
-            print('g:', g)
-        print()
+# Assigning first record:
+for values in data:  # Candidate Elimination considers both +ve as well as -ve records
+    print('Values:', values)
+    if values[-1] == 'Yes':  # +ve
+        s = values[:-1]
+        print('s:', s, '\n')
+        break
+    else:  # -ve
+        for i, value in enumerate(values[:-1]):
+            g[i][i] = dict_list[i][value]
+        print('g:', g, '\n')
+
+for values in data:
+    print('Values:', values)
+    if values[-1] == 'Yes':  # generalize
+        for i, value in enumerate(values[:-1]):
+            if s[i] != value:
+                s[i] = '?'
+        print('s:', s)
+    else:  # specify
+        for i, value in enumerate(values[:-1]):
+            if s[i] != value:
+                g[i][i] = s[i]
+        print('g:', g)
+    print()
 
 
 # Syncing s and g:

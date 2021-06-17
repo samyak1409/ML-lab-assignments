@@ -6,7 +6,6 @@ from csv import reader
 
 
 with open('dataset.csv') as csv_file:
-
     data = reader(csv_file)
 
     attrs = next(data)
@@ -28,6 +27,5 @@ with open('dataset.csv') as csv_file:
                 if h[i] != value:
                     h[i] = '?'
         print('h:', h, '\n')
-
 
 print('Generalised hypothesis:', h)
